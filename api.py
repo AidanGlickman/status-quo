@@ -38,5 +38,19 @@ def get_programs_and_statuses(save=None):
             json.dump(programs, file)
     return programs
 
+def get_program_details(program_id,save=None):
+    # Gets the details of the program with the given id
+    # If `save` is not None, saves the report to a file
+    url = BASE_URL + f"program/{program_id}?view=full"
+    response = requests.get(url)
+    program = response.json()
+    if save is not None:
+        with open(save, "w") as file:
+            json.dump(program, file)
+    return program
+
 if __name__ == "__main__":
-    programs = get_programs_and_statuses(save="programs.json")
+    programs = get_programs_and_statuses(save="data/programs.json")
+    for program in programs:
+        programid = program["id"]
+        get_program_details(programid,save=f"data/programs/{programid}.json")
